@@ -1,4 +1,4 @@
-# Runner example
+# Metarunner example
 
 ```bash
 WORKING_DIR=...  # Choose a working dir
