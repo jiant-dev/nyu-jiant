@@ -73,6 +73,22 @@ python \
     --eval_every_steps 5000 \
     --no_improvements_for_n_evals 30 \
     --save_checkpoint_every_steps 10000 \
+    --output_dir ${OUTPUT_DIR}/mnli__rte/
+
+# Train RTE only
+python \
+    jiant/proj/main/runscript.py \
+    run \
+    --ZZsrc ${MODELS_DIR}/${MODEL_TYPE}/config.json \
+    --jiant_task_container_config_path ${RUN_CONFIG_DIR}/rte.json \
+    --model_load_mode from_transformers \
+    --learning_rate 1e-5 \
+    --force_overwrite \
+    --do_train --do_val \
+    --do_save \
+    --eval_every_steps 5000 \
+    --no_improvements_for_n_evals 30 \
+    --save_checkpoint_every_steps 10000 \
     --output_dir ${OUTPUT_DIR}/rte/
 
 grep major ${OUTPUT_DIR}/rte/val_metrics.json
