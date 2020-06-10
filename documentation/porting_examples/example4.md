@@ -91,5 +91,6 @@ python \
     --save_checkpoint_every_steps 10000 \
     --output_dir ${OUTPUT_DIR}/rte/
 
+grep major ${OUTPUT_DIR}/mnli__rte/val_metrics.json
 grep major ${OUTPUT_DIR}/rte/val_metrics.json
 ```
