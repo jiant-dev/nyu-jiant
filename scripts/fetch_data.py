@@ -40,8 +40,14 @@ def fetch_data(task_name: str, data_dir: str):
                 src=os.path.join(PHILS_ARCHIVE_BASE_PATH, "CCG", f"ccg.{phase}"),
                 dst=os.path.join(task_data_dir, f"ccg.{phase}"),
             )
+        shutil.copy(
+            src=os.path.join(PHILS_ARCHIVE_BASE_PATH, "CCG", "tags_to_id.json"),
+            dst=os.path.join(task_data_dir, "tags_to_id.json"),
+        )
     elif task_name == "cola":
         copy_glue_data(data_dir=data_dir, task_name=task_name)
+    elif task_name == "cosmosqa":
+        simply_copy_fol(data_dir=data_dir, original_fol_name="cosmosqa", task_name=task_name)
     elif task_name == "hellaswag":
         simply_copy_fol(data_dir=data_dir, original_fol_name="HellaSwag", task_name=task_name)
     elif task_name == "mnli":
