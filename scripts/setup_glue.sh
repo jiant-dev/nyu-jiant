@@ -8,7 +8,8 @@ MODELS_DIR=${WORKING_DIR}/models
 CACHE_DIR=${WORKING_DIR}/cache
 
 # ERROR with wnli, diagnostic, snli
-GLUE_TASKS=(cola mrpc qqp sst stsb mnli qnli rte)
+#GLUE_TASKS=(cola mrpc qqp sst stsb mnli qnli rte)
+GLUE_TASKS=(snli qnli)
 MODEL_TYPE=bert-base-cased
 
 mkdir -p ${DATA_DIR}

@@ -5,7 +5,8 @@ RUN_CONFIG_DIR=${WORKING_DIR}/run_config_dir/metarunner_example
 OUTPUT_DIR=${WORKING_DIR}/output_dir/metarunner_example
 
 # ERROR with wnli, diagnostic, qnli in setup
-GLUE_TASKS=(cola mrpc qnli qqp sst stsb mnli rte)
+# GLUE_TASKS=(cola mrpc qnli qqp sst stsb mnli rte)
+GLUE_TASKS=(qnli)
 MODEL_TYPE=bert-base-cased
 
 # Generate run configs
@@ -23,6 +24,7 @@ done
 # Run training
 for TASK_NAME in "${GLUE_TASKS[@]}"
 do
-    sbatch --export=DATA_DIR=$DATA_DIR,MODELS_DIR=$MODELS_DIR,CACHE_DIR=$CACHE_DIR,RUN_CONFIG_DIR=$RUN_CONFIG_DIR,OUTPUT_DIR=$OUTPUT_DIR,TASK_NAME=$TASK_NAME,MODEL_TYPE=$MODEL_TYPE glue_task.sbatch
+    sbatch --export=DATA_DIR=$DATA_DIR,MODELS_DIR=$MODELS_DIR,CACHE_DIR=$CACHE_DIR, \
+        RUN_CONFIG_DIR=$RUN_CONFIG_DIR,OUTPUT_DIR=$OUTPUT_DIR,TASK_NAME=$TASK_NAME,MODEL_TYPE=$MODEL_TYPE task.sbatch
     echo $TASK_NAME
 done
