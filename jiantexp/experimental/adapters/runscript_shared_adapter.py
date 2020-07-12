@@ -5,14 +5,14 @@ import torch
 import jiant.proj.main.modeling.model_setup as jiant_model_setup
 import jiant.proj.main.runner as jiant_runner
 import jiant.proj.main.components.container_setup as container_setup
-import jiant.proj.adapters.metarunner as adapters_metarunner
 import jiant.proj.main.components.evaluate as jiant_evaluate
 import jiant.shared.initialization as initialization
-import jiant.proj.adapters.modeling as adapters_modeling
 import jiant.shared.model_setup as model_setup
 import jiant.utils.torch_utils as torch_utils
 import jiant.utils.zconf as zconf
 import jiant.utils.python.io as py_io
+import jiantexp.experimental.adapters.metarunner as adapters_metarunner
+import jiantexp.experimental.adapters.modeling as adapters_modeling
 
 
 @zconf.run_config
@@ -232,19 +232,44 @@ def run_loop(args: RunConfiguration, checkpoint=None):
 
 
 def run_resume(args: ResumeConfiguration):
-    checkpoint = torch.load(args.checkpoint_path)
+    resume(checkpoint_path=args.checkpoint_path)
+
+
+def resume(checkpoint_path):
+    checkpoint = torch.load(checkpoint_path)
     args = RunConfiguration.from_dict(checkpoint["metadata"]["args"])
     run_loop(args=args, checkpoint=checkpoint)
 
 
+def run_with_continue(cl_args):
+    run_args = RunConfiguration.default_run_cli(cl_args=cl_args)
+    if os.path.exists(os.path.join(run_args.output_dir, "done_file")) or os.path.exists(
+        os.path.join(run_args.output_dir, "val_metrics.json")
+    ):
+        print("Already Done")
+        return
+    elif run_args.save_checkpoint_every_steps and os.path.exists(
+        os.path.join(run_args.output_dir, "checkpoint.p")
+    ):
+        print("Resuming")
+        resume(os.path.join(run_args.output_dir, "checkpoint.p"))
+    else:
+        print("Running from start")
+        run_loop(args=run_args)
+
+
 def main():
     mode, cl_args = zconf.get_mode_and_cl_args()
+    print("MODE", mode)
     if mode == "run":
         run_loop(RunConfiguration.default_run_cli(cl_args=cl_args))
     elif mode == "continue":
         run_resume(ResumeConfiguration.default_run_cli(cl_args=cl_args))
+    elif mode == "run_with_continue":
+        run_with_continue(cl_args=cl_args)
     else:
         raise zconf.ModeLookupError(mode)
+
 
 
 if __name__ == "__main__":
