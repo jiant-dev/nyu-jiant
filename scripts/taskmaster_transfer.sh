@@ -4,11 +4,8 @@ CACHE_DIR=${WORKING_DIR}/cache
 RUN_CONFIG_DIR=${WORKING_DIR}/run_config_dir/taskmaster_transfer
 OUTPUT_DIR=${WORKING_DIR}/output_dir/taskmaster_transfer
 
-# Not supported: qa-srl, qamr
-# Error in wsc (#78)
-# TASKMASTER_TASKS=(boolq ccg cb commonsenseqa copa cosmosqa hellaswag mnli mrc qqp record rte scitail socialiqa sst wic wsc)
-TARGET_TASKS=(boolq cb commonsenseqa copa rte)
-INTERMEDIATE_TASKS=(mnli qqp)
+TARGET_TASKS=(boolq copa)
+INTERMEDIATE_TASKS=(commonsenseqa)
 TASKS=( "${TARGET_TASKS[@]}" "${INTERMEDIATE_TASKS[@]}" )
 
 MODEL_TYPE=roberta-large

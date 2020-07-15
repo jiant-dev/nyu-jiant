@@ -7,7 +7,7 @@ OUTPUT_DIR=${WORKING_DIR}/output_dir/taskmaster
 # Not supported: qa-srl, qamr
 # Error in wsc (#78)
 # TASKMASTER_TASKS=(boolq ccg cb commonsenseqa copa cosmosqa hellaswag mnli mrc qqp record rte scitail socialiqa sst wic wsc)
-TASKMASTER_TARGET_TASKS=${1:-(boolq cb commonsenseqa copa cosmosqa mrc record rte wic)}
+TASKMASTER_TARGET_TASKS=${1:-(boolq cb ccg commonsenseqa copa cosmosqa hellaswag mnli mrc qqp record rte scitail socialiqa sst wic)}
 MODEL_TYPE=roberta-large
 
 # runscript default arguments
