@@ -14,9 +14,9 @@ MODELS_DIR=${WORKING_DIR}/models
 CACHE_DIR=${WORKING_DIR}/cache
 
 # Not supported: qa-srl, qamr
-# Error in wsc (#78)
-# TASKMASTER_TASKS=(boolq ccg cb commonsenseqa copa cosmosqa hellaswag mnli mrc qqp record rte scitail socialiqa sst wic wsc)
-TASKMASTER_TASKS=(boolq ccg cb commonsenseqa copa cosmosqa hellaswag mnli mrc qqp record rte scitail socialiqa sst wic)
+# span alignment tasks not yet supported
+# TASKMASTER_TASKS=(boolq ccg cb commonsenseqa copa cosmosqa hellaswag mnli mrc qasrl qamr qqp record rte scitail socialiqa sst wic wsc)
+TASKMASTER_TASKS=${1:-(boolq cb ccg commonsenseqa copa cosmosqa hellaswag mnli mrc qqp record rte scitail socialiqa sst wic)}
 MODEL_TYPE=roberta-large
 
 python ${JIANT_PATH}/proj/main/export_model.py \
