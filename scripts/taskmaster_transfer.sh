@@ -5,56 +5,58 @@ RUN_CONFIG_DIR=${WORKING_DIR}/run_config_dir/taskmaster_transfer
 OUTPUT_DIR=${WORKING_DIR}/output_dir/taskmaster_transfer
 
 TARGET_TASKS=(boolq copa)
-INTERMEDIATE_TASKS=(commonsenseqa)
+INTERMEDIATE_TASKS=(commonsenseqa scitail cosmosqa socialiqa ccg hellaswag sst qqp mnli)
 TASKS=( "${TARGET_TASKS[@]}" "${INTERMEDIATE_TASKS[@]}" )
 
 MODEL_TYPE=roberta-large
 
-# defaults from https://github.com/nyu-mll/jiant/blob/taskmaster_v1/jiant/config/taskmaster/base_roberta.conf
-epochs = 10
-val_interval = 5000
-lr = 0.00001
 
 # Generate run configs
 for TASK_NAME in "${TASKS[@]}"
 do
     echo ${TASK_NAME}
+ 
+    # defaults from https://github.com/nyu-mll/jiant/blob/taskmaster_v1/jiant/config/taskmaster/base_roberta.conf
+    train_batch_size=4
+    val_interval=5000
+    epochs=10
+    lr=0.00001
 
     # target tasks
     if [ "${TASK_NAME}" == "boolq" ]; then
-        val_interval = 2400
+        val_interval=2400
         train_batch_size=4
         lr=0.000005 
     elif [ "${TASK_NAME}" == "cb" ]; then
-        val_interval = 60
-        epochs = 40
+        val_interval=60
+        epochs=40
         train_batch_size=4
         lr=0.00005
     elif [ "${TASK_NAME}" == "commonsenseqa" ]; then
-        val_interval = 2500
+        val_interval=2500
         train_batch_size=4
         lr=0.000003
     elif [ "${TASK_NAME}" == "copa" ]; then
-        val_interval = 100
-        epochs = 40
+        val_interval=100
+        epochs=40
         train_batch_size=32
         lr=0.000005
     elif [ "${TASK_NAME}" == "cosmosqa" ]; then
         train_batch_size=4
         lr=0.000003
     elif [ "${TASK_NAME}" == "mrc" ]; then
-        val_interval = 1000
+        val_interval=1000
         train_batch_size=4
        	lr=0.00002
     elif [ "${TASK_NAME}" == "record" ]; then
        	train_batch_size=4
         lr=0.00005
     elif [ "${TASK_NAME}" == "rte" ]; then
-        val_interval = 625
+        val_interval=625
         train_batch_size=4
         lr=0.000005
     elif [ "${TASK_NAME}" == "wic" ]; then
-        val_interval = 1000
+        val_interval=1000
         train_batch_size=32
         lr=0.00005
     #intermediate tasks (commonsenseqa and cosmosqa handled above)

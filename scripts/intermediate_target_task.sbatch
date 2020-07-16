@@ -19,7 +19,7 @@ echo $RUN_CONFIG_DIR
 
 timestamp=$(date +%s)
 
-#intermediate task
+# intermediate task
 python \
     $JIANT_PATH/proj/main/runscript.py   \
     run \
@@ -38,16 +38,16 @@ python \
     --seed $timestamp
 
 
-for TARGET_TASK in "${TARGET_TASK[@]}"
+for TARGET_TASK in "${TARGET_TASKS[@]}"
 do
     python \
 	    $JIANT_PATH/proj/main/runscript.py   \
 	    run \
-            --ZZoverrides model_path
+            --ZZoverrides model_path \
    	    --ZZsrc ${MODELS_DIR}/${MODEL_TYPE}/config.json \
-   	    --jiant_task_container_config_path ${RUN_CONFIG_DIR}/${TASK_NAME}.json \
-   	    --model_load_mode from_partial \
-            --model_path ${OUTPUT_DIR}/${TASK_NAME}/best_model.p
+   	    --jiant_task_container_config_path ${RUN_CONFIG_DIR}/${TARGET_TASK}.json \
+   	    --model_load_mode partial \
+            --model_path ${OUTPUT_DIR}/${TASK_NAME}/best_model.p \
    	    --learning_rate $LR \
    	    --force_overwrite \
    	    --do_train \
@@ -57,5 +57,5 @@ do
    	    --no_improvements_for_n_evals 30 \
    	    --save_checkpoint_every_steps 10000 \
    	    --output_dir ${OUTPUT_DIR}/${TASK_NAME}/${TARGET_TASK} \
-	    --seed $timestamp
+            --seed $timestamp
 done
