@@ -10,38 +10,54 @@ OUTPUT_DIR=${WORKING_DIR}/output_dir/taskmaster
 TASKMASTER_TARGET_TASKS=${1:-(boolq cb ccg commonsenseqa copa cosmosqa hellaswag mnli mrc qqp record rte scitail socialiqa sst wic)}
 MODEL_TYPE=roberta-large
 
-# runscript default arguments
-# from: https://github.com/nyu-mll/jiant/blob/taskmaster_v1/scripts/taskmaster_v1/all_tasks.sh
-train_batch_size=4
-val_interval=1000
-epochs=10
-
 # Generate run configs
 for TASK_NAME in "${TASKMASTER_TARGET_TASKS[@]}"
 do
     echo ${TASK_NAME}
 
+    # defaults from https://github.com/nyu-mll/jiant/blob/taskmaster_v1/jiant/config/taskmaster/base_roberta.conf
+    train_batch_size=4
+    val_interval=5000
+    epochs=10
+    lr=0.00001
+
+    # target tasks
     if [ "${TASK_NAME}" == "boolq" ]; then
-        val_interval=1000
+        val_interval=2400
+        train_batch_size=4
+        lr=0.000005 
     elif [ "${TASK_NAME}" == "cb" ]; then
-       	val_interval=60
+        val_interval=60
         epochs=40
+        train_batch_size=4
+        lr=0.00005
+    elif [ "${TASK_NAME}" == "commonsenseqa" ]; then
+        val_interval=2500
+        train_batch_size=4
+        lr=0.000003
     elif [ "${TASK_NAME}" == "copa" ]; then
-        train_batch_size=100
+        val_interval=100
         epochs=40
-        learning_rate=2e-5
+        train_batch_size=32
+        lr=0.000005
     elif [ "${TASK_NAME}" == "cosmosqa" ]; then
-        train_batch_size=3 #debug param
-    elif [ "${TASK_NAME}" == "multirc" ]; then
-        train_batch_size=1 #debug param
-       	val_interval=1000
+        train_batch_size=4
+        lr=0.000003
+    elif [ "${TASK_NAME}" == "mrc" ]; then
+        val_interval=1000
+        train_batch_size=4
+       	lr=0.00002
     elif [ "${TASK_NAME}" == "record" ]; then
-       	train_batch_size=8
-        val_interval=10000
+       	train_batch_size=4
+        lr=0.00005
     elif [ "${TASK_NAME}" == "rte" ]; then
         val_interval=625
+        train_batch_size=4
+        lr=0.000005
     elif [ "${TASK_NAME}" == "wic" ]; then
-        val_interval=1000  
+        val_interval=1000
+        train_batch_size=32
+        lr=0.00005
     fi
 
     python ${NYU_JIANT_DIR}/documentation/porting_examples/example4_assets/make_config.py \
@@ -50,11 +66,6 @@ do
         --train_batch_size $train_batch_size \
         --epochs $epochs \
         --output_path ${RUN_CONFIG_DIR}/${TASK_NAME}.json
-done
 
-# Run training
-for TASK_NAME in "${TASKMASTER_TARGET_TASKS[@]}"
-do
-    echo $TASK_NAME
-    sbatch --export=DATA_DIR=$DATA_DIR,MODELS_DIR=$MODELS_DIR,CACHE_DIR=$CACHE_DIR,RUN_CONFIG_DIR=$RUN_CONFIG_DIR,OUTPUT_DIR=$OUTPUT_DIR,TASK_NAME=$TASK_NAME,MODEL_TYPE=$MODEL_TYPE,VAL_INTERVAL=$val_interval task.sbatch
+    sbatch --export=DATA_DIR=$DATA_DIR,MODELS_DIR=$MODELS_DIR,CACHE_DIR=$CACHE_DIR,RUN_CONFIG_DIR=$RUN_CONFIG_DIR,OUTPUT_DIR=$OUTPUT_DIR,TASK_NAME=$TASK_NAME,MODEL_TYPE=$MODEL_TYPE,VAL_INTERVAL=$val_interval,LR=$lr task.sbatch
 done
