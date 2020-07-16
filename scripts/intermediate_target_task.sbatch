@@ -48,7 +48,7 @@ do
    	    --jiant_task_container_config_path ${RUN_CONFIG_DIR}/${TASK_NAME}.json \
    	    --model_load_mode from_partial \
             --model_path ${OUTPUT_DIR}/${TASK_NAME}/best_model.p
-   	    --learning_rate 1e-5 \
+   	    --learning_rate $LR \
    	    --force_overwrite \
    	    --do_train \
    	    --do_val \
